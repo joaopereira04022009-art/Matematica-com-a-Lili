@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matemática com a Lili 🐰</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Font: Fredoka for playful childish typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', cursive, sans-serif;
+            background: linear-gradient(135deg, #fef08a 0%, #bae6fd 50%, #fbcfe8 100%);
+            min-height: 100vh;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+        .bouncy-btn {
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .bouncy-btn:active {
+            transform: scale(0.92);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+        .animate-lili {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes pulse-pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .pop-effect {
+            animation: pulse-pop 0.4s ease;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-between min-h-screen text-slate-700 overflow-x-hidden p-3 md:p-6">
+
+    <!-- Top Navigation / Header -->
+    <header class="w-full max-w-4xl bg-white/90 backdrop-blur-md rounded-3xl shadow-xl p-4 mb-4 flex flex-col sm:flex-row items-center justify-between border-4 border-pink-300">
+        <div class="flex items-center gap-3 mb-2 sm:mb-0">
+            <div class="w-14 h-14 bg-pink-400 rounded-full flex items-center justify-center text-3xl shadow-inner animate-bounce">🐰</div>
+            <div>
+                <h1 class="text-2xl font-bold text-pink-600 tracking-wide">Matemática com a Lili</h1>
+                <p class="text-xs text-sky-600 font-semibold">Desenvolvedor: João Vitor 🌟</p>
+            </div>
+        </div>
+
+        <!-- Mission Carousel Nav Buttons (5 Games) -->
+        <nav class="flex flex-wrap justify-center gap-2" id="nav-tabs">
+            <button onclick="switchPage(1)" class="nav-btn px-3 py-2 rounded-2xl bg-pink-100 text-pink-700 font-bold text-sm shadow hover:bg-pink-200 transition border-2 border-pink-300" data-page="1">⭐ 1. Estrelas</button>
+            <button onclick="switchPage(2)" class="nav-btn px-3 py-2 rounded-2xl bg-yellow-100 text-yellow-700 font-bold text-sm shadow hover:bg-yellow-200 transition border-2 border-yellow-300" data-page="2">🍎 2. Feirinha</button>
+            <button onclick="switchPage(3)" class="nav-btn px-3 py-2 rounded-2xl bg-emerald-100 text-emerald-700 font-bold text-sm shadow hover:bg-emerald-200 transition border-2 border-emerald-300" data-page="3">⚖️ 3. Maior?</button>
+            <button onclick="switchPage(4)" class="nav-btn px-3 py-2 rounded-2xl bg-purple-100 text-purple-700 font-bold text-sm shadow hover:bg-purple-200 transition border-2 border-purple-300" data-page="4">🔷 4. Formas</button>
+            <button onclick="switchPage(5)" class="nav-btn px-3 py-2 rounded-2xl bg-sky-100 text-sky-700 font-bold text-sm shadow hover:bg-sky-200 transition border-2 border-sky-300" data-page="5">🤖 5. Sequência</button>
+        </nav>
+    </header>
+
+    <!-- Main Game Container (SPA Content Area) -->
+    <main class="w-full max-w-4xl bg-white/95 backdrop-blur rounded-3xl shadow-2xl p-6 md:p-8 flex-1 flex flex-col items-center justify-center relative border-4 border-sky-300 min-h-[440px] mb-4">
+        
+        <!-- Lili Speech Bubble Floating Overlay -->
+        <div class="absolute -top-6 left-6 md:left-12 flex items-center gap-2 bg-yellow-100 border-2 border-yellow-400 px-4 py-2 rounded-2xl shadow-lg z-20 animate-lili">
+            <span class="text-2xl">🐰</span>
+            <span id="lili-speech" class="text-xs md:text-sm font-bold text-yellow-800">Olá! Escolha uma brincadeira lá em cima para começarmos!</span>
+        </div>
+
+        <!-- PAGE 1: Contando Estrelas (1 a 5) -->
+        <div id="page-1" class="game-page w-full flex flex-col items-center text-center">
+            <h2 class="text-2xl md:text-3xl font-bold text-pink-600 mb-2">⭐ Contando Estrelas</h2>
+            <p class="text-sm md:text-base text-slate-600 mb-6">Toque em todas as estrelinhas brillantes para guardá-las!</p>
+            
+            <div class="bg-pink-50 rounded-3xl p-6 w-full max-w-2xl border-2 border-dashed border-pink-300 flex flex-col items-center min-h-[220px] justify-center">
+                <div id="star-container" class="flex flex-wrap justify-center gap-4 mb-4">
+                    <!-- Dynamic stars inserted by JS -->
+                </div>
+                <div class="text-lg font-bold text-pink-700 bg-white px-6 py-2 rounded-full shadow border border-pink-200">
+                    Estrelas guardadas: <span id="star-count" class="text-2xl text-pink-600">0</span> / <span id="star-total">5</span>
+                </div>
+            </div>
+            <button onclick="initPage1()" class="mt-6 bg-pink-500 hover:bg-pink-600 text-white font-bold px-6 py-3 rounded-2xl shadow-lg bouncy-btn text-sm">🔄 Recomeçar</button>
+        </div>
+
+        <!-- PAGE 2: A Feirinha da Lili (Adição Simples) -->
+        <div id="page-2" class="game-page w-full flex flex-col items-center text-center hidden">
+            <h2 class="text-2xl md:text-3xl font-bold text-amber-600 mb-2">🍎 A Feirinha da Lili</h2>
+            <p id="market-question" class="text-sm md:text-base text-slate-600 mb-4">A Lili comprou 2 maçãs e ganhou mais 1! Com quantas ficou?</p>
+            
+            <div class="bg-amber-50 rounded-3xl p-6 w-full max-w-2xl border-2 border-dashed border-amber-300 flex flex-col items-center">
+                <div id="market-visual" class="text-4xl mb-4 flex gap-2">🍎🍎 + 🍎</div>
+                <div id="market-options" class="grid grid-cols-3 gap-4 w-full max-w-md">
+                    <!-- Options generated via JS -->
+                </div>
+            </div>
+            <button onclick="initPage2()" class="mt-6 bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-3 rounded-2xl shadow-lg bouncy-btn text-sm">🔄 Novo Desafio</button>
+        </div>
+
+        <!-- PAGE 3: Qual é o Maior? (Comparação de quantidades) -->
+        <div id="page-3" class="game-page w-full flex flex-col items-center text-center hidden">
+            <h2 class="text-2xl md:text-3xl font-bold text-emerald-600 mb-2">⚖️ Qual é o Maior?</h2>
+            <p class="text-sm md:text-base text-slate-600 mb-4">Toque na caixinha que tem mais elementos!</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-xl my-2">
+                <div onclick="checkGreater(0)" id="box-0" class="bg-emerald-50 hover:bg-emerald-100 border-4 border-emerald-300 rounded-3xl p-6 cursor-pointer shadow-md bouncy-btn flex flex-col items-center">
+                    <span class="text-xl font-bold text-emerald-700 mb-2">🎁 Caixinha A</span>
+                    <div id="box-0-items" class="text-2xl tracking-widest min-h-[48px] flex items-center justify-center">🎈🎈</div>
+                </div>
+                <div onclick="checkGreater(1)" id="box-1" class="bg-emerald-50 hover:bg-emerald-100 border-4 border-emerald-300 rounded-3xl p-6 cursor-pointer shadow-md bouncy-btn flex flex-col items-center">
+                    <span class="text-xl font-bold text-emerald-700 mb-2">🎁 Caixinha B</span>
+                    <div id="box-1-items" class="text-2xl tracking-widest min-h-[48px] flex items-center justify-center">🎈🎈🎈</div>
+                </div>
+            </div>
+            <button onclick="initPage3()" class="mt-6 bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-6 py-3 rounded-2xl shadow-lg bouncy-btn text-sm">🔄 Nova Comparação</button>
+        </div>
+
+        <!-- PAGE 4: Formas Mágicas (Círculo, Quadrado, Triângulo) -->
+        <div id="page-4" class="game-page w-full flex flex-col items-center text-center hidden">
+            <h2 class="text-2xl md:text-3xl font-bold text-purple-600 mb-2">🔷 Formas Mágicas</h2>
+            <p id="shape-target-text" class="text-sm md:text-base text-slate-600 mb-4">Encontre e clique em todas as formas: <strong id="target-shape-name" class="text-purple-700">Círculos 🔴</strong></p>
+            
+            <div class="bg-purple-50 rounded-3xl p-6 w-full max-w-2xl border-2 border-dashed border-purple-300 flex flex-col items-center min-h-[220px] justify-center">
+                <div id="shapes-grid" class="grid grid-cols-3 sm:grid-cols-4 gap-4 w-full">
+                    <!-- Shapes inserted by JS -->
+                </div>
+                <div class="mt-4 text-sm font-bold text-purple-700">Restantes: <span id="shapes-left">0</span></div>
+            </div>
+            <button onclick="initPage4()" class="mt-6 bg-purple-500 hover:bg-purple-600 text-white font-bold px-6 py-3 rounded-2xl shadow-lg bouncy-btn text-sm">🔄 Jogar Novamente</button>
+        </div>
+
+        <!-- PAGE 5: Passos do Robô / Sequência Lógica -->
+        <div id="page-5" class="game-page w-full flex flex-col items-center text-center hidden">
+            <h2 class="text-2xl md:text-3xl font-bold text-sky-600 mb-2">🤖 Passos do Robô</h2>
+            <p class="text-sm md:text-base text-slate-600 mb-4">Complete a sequência lógica da historinha:</p>
+            
+            <div class="bg-sky-50 rounded-3xl p-6 w-full max-w-2xl border-2 border-dashed border-sky-300 flex flex-col items-center">
+                <div id="sequence-display" class="text-3xl md:text-4xl mb-6 bg-white px-6 py-3 rounded-2xl shadow border border-sky-200 tracking-wider">
+                    ⭐ 🐰 ⭐ ?
+                </div>
+                <div id="sequence-options" class="grid grid-cols-3 gap-4 w-full max-w-md">
+                    <!-- Options generated via JS -->
+                </div>
+            </div>
+            <button onclick="initPage5()" class="mt-6 bg-sky-500 hover:bg-sky-600 text-white font-bold px-6 py-3 rounded-2xl shadow-lg bouncy-btn text-sm">🔄 Novo Padrão</button>
+        </div>
+
+    </main>
+
+    <!-- Footer with Developer Credit -->
+    <footer class="text-center text-xs md:text-sm text-slate-600 font-semibold py-1">
+        Desenvolvedor: João Vitor 💖 • Matemática Divertida para Crianças 🐰
+    </footer>
+
+    <!-- JavaScript Application Logic & Web Audio API -->
+    <script>
+        // Web Audio API Sound Synthesizer (No external audio files needed)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'success') {
+                // Happy chord chime
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
+                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.4);
+            } else if (type === 'error') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+                osc.frequency.linearRampToValueAtTime(130, audioCtx.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.2);
+            }
+        }
+
+        // Global State & Lili Quotes
+        let currentPage = 1;
+        const liliQuotes = {
+            1: "Vamos contar as estrelinhas brilhantes de 1 a 5!",
+            2: "Bem-vinda à feirinha! Vamos somar as frutinhas com alegria!",
+            3: "Qual caixinha tem mais quantidade? Vamos descobrir!",
+            4: "Hora da caça às formas geométricas! Ache todas!",
+            5: "Ajude o robô completando a sequência mágica!"
+        };
+
+        function setLiliSpeech(text) {
+            const speechEl = document.getElementById('lili-speech');
+            speechEl.textContent = text;
+            speechEl.classList.remove('pop-effect');
+            void speechEl.offsetWidth; // trigger reflow
+            speechEl.classList.add('pop-effect');
+        }
+
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 50,
+                    spread: 60,
+                    origin: { y: 0.7 }
+                });
+            }
+        }
+
+        // SPA Page Switcher
+        function switchPage(pageNum) {
+            playSound('click');
+            currentPage = pageNum;
+            document.querySelectorAll('.game-page').forEach(page => page.classList.add('hidden'));
+            document.getElementById(`page-${pageNum}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('ring-4', 'ring-pink-400', 'scale-105');
+                if(btn.getAttribute('data-page') == pageNum) {
+                    btn.classList.add('ring-4', 'ring-pink-400', 'scale-105');
+                }
+            });
+
+            setLiliSpeech(liliQuotes[pageNum]);
+
+            if (pageNum === 1) initPage1();
+            if (pageNum === 2) initPage2();
+            if (pageNum === 3) initPage3();
+            if (pageNum === 4) initPage4();
+            if (pageNum === 5) initPage5();
+        }
+
+        /* --- GAME 1: Contando Estrelas (1 a 5) --- */
+        let p1Total = 5;
+        let p1Counted = 0;
+
+        function initPage1() {
+            p1Total = Math.floor(Math.random() * 2) + 4; // 4 or 5 stars
+            p1Counted = 0;
+            document.getElementById('star-total').textContent = p1Total;
+            document.getElementById('star-count').textContent = p1Counted;
+            
+            const container = document.getElementById('star-container');
+            container.innerHTML = '';
+
+            for (let i = 0; i < p1Total; i++) {
+                const btn = document.createElement('button');
+                btn.className = "text-4xl md:text-5xl p-3 bg-white rounded-2xl shadow-md bouncy-btn hover:scale-110 transition cursor-pointer border-2 border-pink-200";
+                btn.textContent = '⭐';
+                btn.onclick = function() {
+                    if (!btn.disabled) {
+                        playSound('click');
+                        btn.disabled = true;
+                        btn.classList.add('opacity-40', 'scale-90');
+                        p1Counted++;
+                        document.getElementById('star-count').textContent = p1Counted;
+                        
+                        if (p1Counted === p1Total) {
+                            playSound('success');
+                            triggerConfetti();
+                            setLiliSpeech("Parabéns! Você contou todas as estrelas com sucesso! 🌟");
+                        } else {
+                            playSound('click');
+                            setLiliSpeech(`Isso! Faltam mais ${p1Total - p1Counted}!`);
+                        }
+                    }
+                };
+                container.appendChild(btn);
+            }
+        }
+
+        /* --- GAME 2: A Feirinha da Lili (Adição) --- */
+        let p2CorrectAnswer = 0;
+
+        function initPage2() {
+            const num1 = Math.floor(Math.random() * 2) + 1; // 1 or 2
+            const num2 = Math.floor(Math.random() * 2) + 1; // 1 or 2
+            p2CorrectAnswer = num1 + num2;
+
+            document.getElementById('market-question').textContent = `A Lili tem ${num1} maçãs e ganhou mais ${num2}! Com quantas ficou no total?`;
+            document.getElementById('market-visual').textContent = "🍎".repeat(num1) + " + " + "🍎".repeat(num2);
+
+            const optionsContainer = document.getElementById('market-options');
+            optionsContainer.innerHTML = '';
+
+            let options = [p2CorrectAnswer];
+            while(options.length < 3) {
+                let rand = Math.floor(Math.random() * 5) + 1;
+                if (!options.includes(rand)) options.push(rand);
+            }
+            options.sort(() => Math.random() - 0.5);
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white hover:bg-amber-100 text-amber-800 text-2xl font-bold py-3 rounded-2xl shadow border-2 border-amber-300 bouncy-btn";
+                btn.textContent = opt + " 🍎";
+                btn.onclick = function() {
+                    if (opt === p2CorrectAnswer) {
+                        playSound('success');
+                        triggerConfetti();
+                        setLiliSpeech("Isso mesmo! Você acertou a soma da feirinha! 🎉");
+                        btn.classList.add('bg-emerald-200', 'border-emerald-400');
+                    } else {
+                        playSound('error');
+                        setLiliSpeech("Quase lá! Vamos contar nos dedinhos de novo? 😉");
+                        btn.classList.add('bg-rose-200', 'border-rose-400');
+                    }
+                };
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        /* --- GAME 3: Qual é o Maior? --- */
+        let winningBox = 0;
+
+        function initPage3() {
+            const countA = Math.floor(Math.random() * 3) + 1; // 1 to 3
+            let countB = Math.floor(Math.random() * 3) + 3; // 3 to 5
+            if (countA === countB) countB++;
+
+            winningBox = countA > countB ? 0 : 1;
+            const biggerCount = Math.max(countA, countB);
+            const smallerCount = Math.min(countA, countB);
+
+            const itemsA = winningBox === 0 ? biggerCount : smallerCount;
+            const itemsB = winningBox === 1 ? biggerCount : smallerCount;
+
+            document.getElementById('box-0-items').textContent = "🎈".repeat(itemsA);
+            document.getElementById('box-1-items').textContent = "🎈".repeat(itemsB);
+        }
+
+        function checkGreater(boxIndex) {
+            if (boxIndex === winningBox) {
+                playSound('success');
+                triggerConfetti();
+                setLiliSpeech("Isso mesmo! Essa caixinha tem mais balões! 🌟🎉");
+            } else {
+                playSound('error');
+                setLiliSpeech("Quase! A outra caixinha tem mais quantidade. Tente de novo! 😉");
+            }
+        }
+
+        /* --- GAME 4: Formas Mágicas --- */
+        const shapesPool = [
+            { name: "Círculo", icon: "🔴" },
+            { name: "Quadrado", icon: "🟦" },
+            { name: "Triângulo", icon: "🔺" }
+        ];
+
+        function initPage4() {
+            const target = shapesPool[Math.floor(Math.random() * shapesPool.length)];
+            document.getElementById('target-shape-name').textContent = `${target.name} ${target.icon}`;
+
+            const grid = document.getElementById('shapes-grid');
+            grid.innerHTML = '';
+
+            let items = [];
+            for (let i = 0; i < 8; i++) {
+                let isTarget = i < 3 || Math.random() > 0.5;
+                let shape = isTarget ? target : shapesPool.filter(s => s.name !== target.name)[Math.floor(Math.random() * 2)];
+                items.push(shape);
+            }
+            items.sort(() => Math.random() - 0.5);
+
+            let remainingTargets = items.filter(s => s.name === target.name).length;
+            document.getElementById('shapes-left').textContent = remainingTargets;
+
+            items.forEach(shape => {
+                const btn = document.createElement('button');
+                btn.className = "text-4xl p-3 bg-white rounded-2xl shadow border-2 border-purple-200 bouncy-btn hover:scale-110 transition cursor-pointer";
+                btn.textContent = shape.icon;
+                btn.onclick = function() {
+                    if (!btn.disabled) {
+                        if (shape.name === target.name) {
+                            playSound('click');
+                            btn.disabled = true;
+                            btn.classList.add('opacity-30', 'scale-90');
+                            remainingTargets--;
+                            document.getElementById('shapes-left').textContent = remainingTargets;
+                            
+                            if (remainingTargets === 0) {
+                                playSound('success');
+                                triggerConfetti();
+                                setLiliSpeech("Parabéns! Você encontrou todas as formas certas! ⭐");
+                            } else {
+                                setLiliSpeech("Isso! Ache mais!");
+                            }
+                        } else {
+                            playSound('error');
+                            setLiliSpeech("Ops! Essa é outra forma, procure o " + target.name + "!");
+                        }
+                    }
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        /* --- GAME 5: Passos do Robô / Sequência --- */
+        let p5CorrectOpt = "";
+
+        function initPage5() {
+            const sequences = [
+                { pattern: "⭐ 🐰 ⭐ ?", correct: "🐰", options: ["🐰", "🎈", "🍎"] },
+                { pattern: "🍎 🍎 🍌 ?", correct: "🍌", options: ["🍌", "🍎", "⭐"] },
+                { pattern: "🎈 ⭐ 🎈 ?", correct: "⭐", options: ["⭐", "🎈", "🐰"] }
+            ];
+            const currentSeq = sequences[Math.floor(Math.random() * sequences.length)];
+            p5CorrectOpt = currentSeq.correct;
+
+            document.getElementById('sequence-display').textContent = currentSeq.pattern;
+
+            const optionsContainer = document.getElementById('sequence-options');
+            optionsContainer.innerHTML = '';
+
+            let shuffledOpts = [...currentSeq.options].sort(() => Math.random() - 0.5);
+
+            shuffledOpts.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white hover:bg-sky-100 text-sky-800 text-3xl py-3 rounded-2xl shadow border-2 border-sky-300 bouncy-btn";
+                btn.textContent = opt;
+                btn.onclick = function() {
+                    if (opt === p5CorrectOpt) {
+                        playSound('success');
+                        triggerConfetti();
+                        setLiliSpeech("Uhuul! Sequência completada perfeitamente pelo robô! 🤖✨");
+                        btn.classList.add('bg-emerald-200', 'border-emerald-400');
+                    } else {
+                        playSound('error');
+                        setLiliSpeech("Ops! Esse não é o próximo passo. Tente outro! 😉");
+                        btn.classList.add('bg-rose-200', 'border-rose-400');
+                    }
+                };
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        // Run Page 1 on load
+        window.onload = function() {
+            switchPage(1);
+        };
+    </script>
+</body>
+</html>
