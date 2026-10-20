@@ -3,457 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matemática com a Lili 🐰 (5º Ano)</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"></script>
-    <!-- Canvas Confetti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <!-- Google Font: Fredoka -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Aventura Matemática - 5º Ano 🚀</title>
+    <!-- Tailwind CSS para um design moderno -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Fredoka', cursive, sans-serif;
-            background: linear-gradient(135deg, #fef08a 0%, #bae6fd 50%, #fbcfe8 100%);
-            min-height: 100vh;
-            user-select: none;
-            -webkit-touch-callout: none;
-        }
-        .bouncy-btn {
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .bouncy-btn:active {
-            transform: scale(0.92);
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-8px) rotate(2deg); }
-        }
-        .animate-lili {
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes pulse-pop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        .pop-effect {
-            animation: pulse-pop 0.4s ease;
-        }
+        body { font-family: 'Poppins', sans-serif; }
     </style>
 </head>
-<body class="flex flex-col items-center justify-between min-h-screen text-slate-700 overflow-x-hidden p-3 md:p-6">
+<body class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 min-h-screen flex items-center justify-center p-4">
 
-    <!-- Top Navigation / Header -->
-    <header class="w-full max-w-4xl bg-white/90 backdrop-blur-md rounded-3xl shadow-xl p-4 mb-4 flex flex-col sm:flex-row items-center justify-between border-4 border-pink-300">
-        <div class="flex items-center gap-3 mb-2 sm:mb-0">
-            <div class="w-14 h-14 bg-pink-400 rounded-full flex items-center justify-center text-3xl shadow-inner animate-bounce">🐰</div>
-            <div>
-                <h1 class="text-2xl font-bold text-pink-600 tracking-wide">Matemática com a Lili - 5º Ano</h1>
-                <p class="text-xs text-sky-600 font-semibold">Desenvolvedor: João Vitor 🌟</p>
-            </div>
-        </div>
-
-        <!-- Mission Carousel Nav Buttons (5 Games) -->
-        <nav class="flex flex-wrap justify-center gap-2" id="nav-tabs">
-            <button onclick="switchPage(1)" class="nav-btn px-3 py-2 rounded-2xl bg-pink-100 text-pink-700 font-bold text-sm shadow hover:bg-pink-200 transition border-2 border-pink-300" data-page="1">🍕 1. Frações</button>
-            <button onclick="switchPage(2)" class="nav-btn px-3 py-2 rounded-2xl bg-yellow-100 text-yellow-700 font-bold text-sm shadow hover:bg-yellow-200 transition border-2 border-yellow-300" data-page="2">🛒 2. Desconto</button>
-            <button onclick="switchPage(3)" class="nav-btn px-3 py-2 rounded-2xl bg-emerald-100 text-emerald-700 font-bold text-sm shadow hover:bg-emerald-200 transition border-2 border-emerald-300" data-page="3">📐 3. Perímetro</button>
-            <button onclick="switchPage(4)" class="nav-btn px-3 py-2 rounded-2xl bg-purple-100 text-purple-700 font-bold text-sm shadow hover:bg-purple-200 transition border-2 border-purple-300" data-page="4">⚖️ 4. Decimais</button>
-            <button onclick="switchPage(5)" class="nav-btn px-3 py-2 rounded-2xl bg-sky-100 text-sky-700 font-bold text-sm shadow hover:bg-sky-200 transition border-2 border-sky-300" data-page="5">🧠 5. Desafio</button>
-        </nav>
-    </header>
-
-    <!-- Main Game Container (SPA Content Area) -->
-    <main class="w-full max-w-4xl bg-white/95 backdrop-blur rounded-3xl shadow-2xl p-6 md:p-8 flex-1 flex flex-col items-center justify-center relative border-4 border-sky-300 min-h-[460px] mb-4">
+    <!-- Container Principal da SPA -->
+    <div id="app" class="bg-white w-full max-w-xl rounded-3xl shadow-2xl p-6 md:p-8 text-slate-800 transition-all duration-300">
         
-        <!-- Lili Speech Bubble Floating Overlay -->
-        <div class="absolute -top-6 left-6 md:left-12 flex items-center gap-2 bg-yellow-100 border-2 border-yellow-400 px-4 py-2 rounded-2xl shadow-lg z-20 animate-lili">
-            <span class="text-2xl">🐰</span>
-            <span id="lili-speech" class="text-xs md:text-sm font-bold text-yellow-800">Olá, fera do 5º ano! Escolha um desafio acima para começar!</span>
-        </div>
-
-        <!-- PAGE 1: Frações Equivalentes / Pizzas -->
-        <div id="page-1" class="game-page w-full flex flex-col items-center text-center">
-            <h2 class="text-2xl md:text-3xl font-bold text-pink-600 mb-2">🍕 O Desafio das Frações</h2>
-            <p id="p1-question" class="text-sm md:text-base text-slate-600 mb-4">Qual fração representa a parte pintada da pizza?</p>
-            
-            <div class="bg-pink-50 rounded-3xl p-6 w-full max-w-2xl border-2 border-dashed border-pink-300 flex flex-col items-center">
-                <div id="p1-visual" class="text-5xl mb-4 font-bold tracking-widest text-pink-700 bg-white px-6 py-4 rounded-2xl shadow border border-pink-200">
-                    🍕 [Visualizador]
-                </div>
-                <div id="p1-options" class="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-md">
-                    <!-- Options generated via JS -->
-                </div>
+        <!-- TELA 1: BOAS-VINDAS -->
+        <div id="welcome-screen" class="text-center space-y-6">
+            <div class="inline-block bg-indigo-100 p-4 rounded-full text-4xl">
+                🧠✨
             </div>
-            <button onclick="initPage1()" class="mt-6 bg-pink-500 hover:bg-pink-600 text-white font-bold px-6 py-3 rounded-2xl shadow-lg bouncy-btn text-sm">🔄 Próxima Fração</button>
+            <h1 class="text-3xl font-bold text-indigo-600">Desafio Matemágico!</h1>
+            <p class="text-slate-600">
+                Olá, futuro(a) cientista! Você está pronto(a) para testar seus superpoderes de matemática com 5 desafios incríveis do 5º ano?
+            </p>
+            <button onclick="startQuiz()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg transition-transform transform hover:scale-105 cursor-pointer">
+                Começar Aventura! 🚀
+            </button>
         </div>
 
-        <!-- PAGE 2: Porcentagem e Descontos (Compras) -->
-        <div id="page-2" class="game-page w-full flex flex-col items-center text-center hidden">
-            <h2 class="text-2xl md:text-3xl font-bold text-amber-600 mb-2">🛒 Calculando Descontos</h2>
-            <p id="p2-question" class="text-sm md:text-base text-slate-600 mb-4">Um livro custa R$ 50 e está com 20% de desconto. Quanto custa agora?</p>
-            
-            <div class="bg-amber-50 rounded-3xl p-6 w-full max-w-2xl border-2 border-dashed border-amber-300 flex flex-col items-center">
-                <div id="p2-options" class="grid grid-cols-2 gap-4 w-full max-w-md mt-2">
-                    <!-- Options generated via JS -->
-                </div>
+        <!-- TELA 2: QUIZ / DESAFIOS (Oculto inicialmente) -->
+        <div id="quiz-screen" class="hidden space-y-6">
+            <!-- Barra de Progresso e Pontuação -->
+            <div class="flex justify-between items-center text-sm font-semibold text-slate-500 border-b pb-3">
+                <span id="question-counter">Desafio 1 de 5</span>
+                <span id="score-display" class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">Pontos: 0</span>
             </div>
-            <button onclick="initPage2()" class="mt-6 bg-amber-500 hover:bg-amber-600 text-white font-bold px-6 py-3 rounded-2xl shadow-lg bouncy-btn text-sm">🔄 Novo Produto</button>
-        </div>
 
-        <!-- PAGE 3: Perímetro de Polígonos -->
-        <div id="page-3" class="game-page w-full flex flex-col items-center text-center hidden">
-            <h2 class="text-2xl md:text-3xl font-bold text-emerald-600 mb-2">📐 Medindo o Perímetro</h2>
-            <p id="p3-question" class="text-sm md:text-base text-slate-600 mb-4">Qual é o perímetro de um campo retangular com 12m de comprimento e 5m de largura?</p>
-            
-            <div class="bg-emerald-50 rounded-3xl p-6 w-full max-w-2xl border-2 border-dashed border-emerald-300 flex flex-col items-center">
-                <div id="p3-visual" class="bg-white px-6 py-3 rounded-2xl shadow border border-emerald-200 text-lg font-bold text-emerald-800 mb-4">
-                    📏 Retângulo: 12m por 5m
-                </div>
-                <div id="p3-options" class="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-md">
-                    <!-- Options generated via JS -->
-                </div>
+            <!-- Pergunta -->
+            <div class="space-y-2">
+                <h2 id="challenge-title" class="text-xl font-bold text-indigo-900"></h2>
+                <p id="challenge-question" class="text-slate-700 text-base md:text-lg leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100"></p>
             </div>
-            <button onclick="initPage3()" class="mt-6 bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-6 py-3 rounded-2xl shadow-lg bouncy-btn text-sm">🔄 Novo Cálculo</button>
-        </div>
 
-        <!-- PAGE 4: Operações com Números Decimais -->
-        <div id="page-4" class="game-page w-full flex flex-col items-center text-center hidden">
-            <h2 class="text-2xl md:text-3xl font-bold text-purple-600 mb-2">⚖️ Operações com Decimais</h2>
-            <p id="p4-question" class="text-sm md:text-base text-slate-600 mb-4">Quanto é 3,5 + 2,25?</p>
-            
-            <div class="bg-purple-50 rounded-3xl p-6 w-full max-w-2xl border-2 border-dashed border-purple-300 flex flex-col items-center">
-                <div id="p4-options" class="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-md mt-2">
-                    <!-- Options generated via JS -->
-                </div>
+            <!-- Opções de Resposta -->
+            <div id="options-container" class="space-y-3">
+                <!-- Gerado via JavaScript -->
             </div>
-            <button onclick="initPage4()" class="mt-6 bg-purple-500 hover:bg-purple-600 text-white font-bold px-6 py-3 rounded-2xl shadow-lg bouncy-btn text-sm">🔄 Nova Operação</button>
+
+            <!-- Feedback Instantâneo -->
+            <div id="feedback-box" class="hidden p-4 rounded-xl text-center font-semibold text-sm"></div>
+
+            <!-- Botão Próximo -->
+            <button id="next-btn" onclick="nextQuestion()" class="hidden w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md transition-all cursor-pointer">
+                Próximo Desafio ➡️
+            </button>
         </div>
 
-        <!-- PAGE 5: Raciocínio Lógico e Expressões Numéricas -->
-        <div id="page-5" class="game-page w-full flex flex-col items-center text-center hidden">
-            <h2 class="text-2xl md:text-3xl font-bold text-sky-600 mb-2">🧠 Desafio Numérico</h2>
-            <p id="p5-question" class="text-sm md:text-base text-slate-600 mb-4">Resolva a expressão: 15 + 5 × 2 = ?</p>
-            
-            <div class="bg-sky-50 rounded-3xl p-6 w-full max-w-2xl border-2 border-dashed border-sky-300 flex flex-col items-center">
-                <div id="p5-options" class="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-md mt-2">
-                    <!-- Options generated via JS -->
-                </div>
+        <!-- TELA 3: RESULTADO FINAL (Oculto inicialmente) -->
+        <div id="result-screen" class="hidden text-center space-y-6">
+            <div class="text-5xl" id="result-emoji">🏆</div>
+            <h2 class="text-2xl font-bold text-indigo-900">Missão Cumprida!</h2>
+            <p id="result-message" class="text-slate-600 text-lg"></p>
+            <div class="bg-indigo-50 p-4 rounded-2xl">
+                <span class="text-sm text-slate-500">Sua pontuação final:</span>
+                <div id="final-score" class="text-4xl font-extrabold text-indigo-600 mt-1"></div>
             </div>
-            <button onclick="initPage5()" class="mt-6 bg-sky-500 hover:bg-sky-600 text-white font-bold px-6 py-3 rounded-2xl shadow-lg bouncy-btn text-sm">🔄 Novo Desafio</button>
+            <button onclick="restartQuiz()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg transition-transform transform hover:scale-105 cursor-pointer">
+                Jogar Novamente 🔄
+            </button>
         </div>
 
-    </main>
+    </div>
 
-    <!-- Footer with Developer Credit -->
-    <footer class="text-center text-xs md:text-sm text-slate-600 font-semibold py-1">
-        Desenvolvedor: João Vitor 💖 • Matemática do 5º Ano com a Lili 🐰
-    </footer>
-
-    <!-- JavaScript Application Logic & Web Audio API -->
+    <!-- Script da Aplicação -->
     <script>
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function playSound(type) {
-            if (!audioCtx) return;
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
+        // Banco de Dados com 5 Desafios do 5º Ano
+        const challenges = [
+            {
+                title: "Desafio 1: Compras no Supermercado 🛒",
+                question: "João comprou 3 cadernos por R$ 7,50 cada. Ele pagou com uma nota de R$ 50,00. Quanto João recebeu de troco?",
+                options: ["R$ 27,50", "R$ 22,50", "R$ 32,50", "R$ 25,00"],
+                answer: "R$ 27,50"
+            },
+            {
+                title: "Desafio 2: Frações Deliciosas 🍕",
+                question: "Uma pizza foi dividida em 8 pedaços iguais. Ana comeu 3 pedaços. Qual fração da pizza sobrou?",
+                options: ["3/8", "5/8", "8/5", "1/2"],
+                answer: "5/8"
+            },
+            {
+                title: "Desafio 3: Geometria Divertida 📐",
+                question: "Qual é a área de um campo retangular que mede 10 metros de largura e 25 metros de comprimento?",
+                options: ["35 metros quadrados", "70 metros quadrados", "250 metros quadrados", "100 metros quadrados"],
+                answer: "250 metros quadrados"
+            },
+            {
+                title: "Desafio 4: Operações com Decimais ⚖️",
+                question: "Quanto é 45,50 somado com 12,30?",
+                options: ["57,80", "56,70", "58,80", "57,70"],
+                answer: "57,80"
+            },
+            {
+                title: "Desafio 5: Sequência Secreta 🔢",
+                question: "Descubra o padrão e diga qual é o próximo número da sequência: 5, 10, 20, 40, ...",
+                options: ["60", "80", "50", "100"],
+                answer: "80"
             }
-            const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
+        ];
 
-            if (type === 'click') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
-                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.1);
-            } else if (type === 'success') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
-                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
-                osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2);
-                gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.4);
-            } else if (type === 'error') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-                osc.frequency.linearRampToValueAtTime(130, audioCtx.currentTime + 0.2);
-                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.2);
-            }
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        const welcomeScreen = document.getElementById("welcome-screen");
+        const quizScreen = document.getElementById("quiz-screen");
+        const resultScreen = document.getElementById("result-screen");
+        
+        const questionCounter = document.getElementById("question-counter");
+        const scoreDisplay = document.getElementById("score-display");
+        const challengeTitle = document.getElementById("challenge-title");
+        const challengeQuestion = document.getElementById("challenge-question");
+        const optionsContainer = document.getElementById("options-container");
+        const feedbackBox = document.getElementById("feedback-box");
+        const nextBtn = document.getElementById("next-btn");
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            welcomeScreen.classList.add("hidden");
+            resultScreen.classList.add("hidden");
+            quizScreen.classList.remove("hidden");
+            loadQuestion();
         }
 
-        let currentPage = 1;
-        const liliQuotes = {
-            1: "Frações no 5º ano são fáceis quando praticamos com pizza!",
-            2: "Vamos calcular porcentagens e descontos como gente grande!",
-            3: "Perímetro é a soma de todos os lados da figura geométrica!",
-            4: "Atenção na vírgula ao somar e subtrair números decimais!",
-            5: "Lembre-se da regra de precedência: multiplicação vem antes da adição!"
-        };
+        function loadQuestion() {
+            answered = false;
+            feedbackBox.classList.add("hidden");
+            nextBtn.classList.add("hidden");
 
-        function setLiliSpeech(text) {
-            const speechEl = document.getElementById('lili-speech');
-            speechEl.textContent = text;
-            speechEl.classList.remove('pop-effect');
-            void speechEl.offsetWidth;
-            speechEl.classList.add('pop-effect');
+            const current = challenges[currentQuestionIndex];
+            questionCounter.innerText = `Desafio ${currentQuestionIndex + 1} de ${challenges.length}`;
+            scoreDisplay.innerText = `Pontos: ${score}`;
+            challengeTitle.innerText = current.title;
+            challengeQuestion.innerText = current.question;
+
+            optionsContainer.innerHTML = "";
+            current.options.forEach(option => {
+                const btn = document.createElement("button");
+                btn.className = "w-full text-left p-4 rounded-xl border-2 border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 transition-all font-medium text-slate-700 cursor-pointer";
+                btn.innerText = option;
+                btn.onclick = () => selectOption(btn, option, current.answer);
+                optionsContainer.appendChild(btn);
+            });
         }
 
-        function triggerConfetti() {
-            if (typeof confetti === 'function') {
-                confetti({
-                    particleCount: 50,
-                    spread: 60,
-                    origin: { y: 0.7 }
-                });
-            }
-        }
+        function selectOption(buttonElement, selectedOption, correctAnswer) {
+            if (answered) return;
+            answered = true;
 
-        function switchPage(pageNum) {
-            playSound('click');
-            currentPage = pageNum;
-            document.querySelectorAll('.game-page').forEach(page => page.classList.add('hidden'));
-            document.getElementById(`page-${pageNum}`).classList.remove('hidden');
-
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('ring-4', 'ring-pink-400', 'scale-105');
-                if(btn.getAttribute('data-page') == pageNum) {
-                    btn.classList.add('ring-4', 'ring-pink-400', 'scale-105');
+            const allButtons = optionsContainer.querySelectorAll("button");
+            
+            allButtons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.innerText === correctAnswer) {
+                    btn.classList.remove("border-slate-200", "hover:border-indigo-500", "hover:bg-indigo-50");
+                    btn.classList.add("bg-emerald-100", "border-emerald-500", "text-emerald-800");
                 }
             });
 
-            setLiliSpeech(liliQuotes[pageNum]);
-
-            if (pageNum === 1) initPage1();
-            if (pageNum === 2) initPage2();
-            if (pageNum === 3) initPage3();
-            if (pageNum === 4) initPage4();
-            if (pageNum === 5) initPage5();
-        }
-
-        /* --- JOGO 1: Frações --- */
-        let p1Correct = "";
-        function initPage1() {
-            const fractions = [
-                { text: "Se uma barra de chocolate tem 8 pedaços e você comeu 3, qual fração representa o que você comeu?", ans: "3/8", opts: ["3/8", "5/8", "3/5", "8/3"] },
-                { text: "Em uma turma de 20 alunos, 12 são meninas. Qual fração representa os meninos?", ans: "8/20", opts: ["12/20", "8/20", "12/8", "8/12"] },
-                { text: "Comi 2 fatias de uma pizza que foidividida em 6 pedaços iguais. Que fração comi?", ans: "2/6", opts: ["2/6", "4/6", "2/4", "6/2"] },
-                { text: "João pintou 4 partes de um painel quadriculado em 10 partes iguais. Qual a fração?", ans: "4/10", opts: ["6/10", "4/6", "4/10", "10/4"] }
-            ];
-            const current = fractions[Math.floor(Math.random() * fractions.length)];
-            p1Correct = current.ans;
-
-            document.getElementById('p1-question').textContent = current.text;
-            document.getElementById('p1-visual').textContent = "🍕 Seção de Frações";
-
-            const container = document.getElementById('p1-options');
-            container.innerHTML = '';
-            let shuffledOpts = [...current.opts].sort(() => Math.random() - 0.5);
-
-            shuffledOpts.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "bg-white hover:bg-pink-100 text-pink-800 text-xl font-bold py-3 rounded-2xl shadow border-2 border-pink-300 bouncy-btn";
-                btn.textContent = opt;
-                btn.onclick = function() {
-                    if (opt === p1Correct) {
-                        playSound('success');
-                        triggerConfetti();
-                        setLiliSpeech("Excelente! Você mandou muito bem em frações! 🍕✨");
-                        btn.classList.add('bg-emerald-200', 'border-emerald-400');
-                    } else {
-                        playSound('error');
-                        setLiliSpeech("Quase! Revise o numerador e o denominador. Tente outra!");
-                        btn.classList.add('bg-rose-200', 'border-rose-400');
-                    }
-                };
-                container.appendChild(btn);
-            });
-        }
-
-        /* --- JOGO 2: Porcentagem / Descontos --- */
-        let p2Correct = 0;
-        function initPage2() {
-            const items = [
-                { item: "uma bola de R$ 80", disc: 25, ans: 60 },
-                { item: "um jogo de R$ 100", disc: 10, ans: 90 },
-                { item: "uma blusa de R$ 40", disc: 50, ans: 20 },
-                { item: "um livro de R$ 60", disc: 20, ans: 48 }
-            ];
-            const current = items[Math.floor(Math.random() * items.length)];
-            p2Correct = current.ans;
-
-            document.getElementById('p2-question').textContent = `Lili quer comprar ${current.item} com ${current.disc}% de desconto. Quanto ela vai pagar?`;
-
-            const container = document.getElementById('p2-options');
-            container.innerHTML = '';
-
-            let opts = [p2Correct];
-            while(opts.length < 4) {
-                let r = p2Correct + (Math.floor(Math.random() * 10) - 5);
-                if (r > 0 && !opts.includes(r)) opts.push(r);
+            if (selectedOption === correctAnswer) {
+                score += 20; // 5 perguntas * 20 = 100 pontos no total
+                scoreDisplay.innerText = `Pontos: ${score}`;
+                feedbackBox.className = "p-4 rounded-xl text-center font-semibold text-sm bg-emerald-100 text-emerald-800";
+                feedbackBox.innerText = "🎉 Resposta Correta! Mandou muito bem!";
+            } else {
+                buttonElement.classList.remove("border-slate-200", "hover:border-indigo-500", "hover:bg-indigo-50");
+                buttonElement.classList.add("bg-rose-100", "border-rose-500", "text-rose-800");
+                feedbackBox.className = "p-4 rounded-xl text-center font-semibold text-sm bg-rose-100 text-rose-800";
+                feedbackBox.innerText = `❌ Ops! A resposta correta era: ${correctAnswer}`;
             }
-            opts.sort(() => Math.random() - 0.5);
 
-            opts.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "bg-white hover:bg-amber-100 text-amber-800 text-xl font-bold py-3 rounded-2xl shadow border-2 border-amber-300 bouncy-btn";
-                btn.textContent = `R$ ${opt},00`;
-                btn.onclick = function() {
-                    if (opt === p2Correct) {
-                        playSound('success');
-                        triggerConfetti();
-                        setLiliSpeech("Isso mesmo! Calculou o desconto perfeitamente! 🛒🎉");
-                        btn.classList.add('bg-emerald-200', 'border-emerald-400');
-                    } else {
-                        playSound('error');
-                        setLiliSpeech("Quase! Lembre-se de calcular a porcentagem do valor e subtrair.");
-                        btn.classList.add('bg-rose-200', 'border-rose-400');
-                    }
-                };
-                container.appendChild(btn);
-            });
+            feedbackBox.classList.remove("hidden");
+            nextBtn.classList.remove("hidden");
         }
 
-        /* --- JOGO 3: Perímetro --- */
-        let p3Correct = 0;
-        function initPage3() {
-            const shapes = [
-                { name: "um retângulo de 10m por 4m", ans: 28, vis: "📐 Retângulo: 10m x 4m" },
-                { name: "um quadrado com lados de 7m", ans: 28, vis: "🟥 Quadrado: Lado 7m" },
-                { name: "um campo retangular de 15m por 8m", ans: 46, vis: "📐 Retângulo: 15m x 8m" },
-                { name: "um jardim hexagonal regular com lados de 5m", ans: 30, vis: "⬡ Hexágono: Lado 5m" }
-            ];
-            const current = shapes[Math.floor(Math.random() * shapes.length)];
-            p3Correct = current.ans;
-
-            document.getElementById('p3-question').textContent = `Qual é o perímetro de ${current.name}?`;
-            document.getElementById('p3-visual').textContent = current.vis;
-
-            const container = document.getElementById('p3-options');
-            container.innerHTML = '';
-
-            let opts = [p3Correct];
-            while(opts.length < 4) {
-                let r = p3Correct + (Math.floor(Math.random() * 8) - 4);
-                if (r > 0 && !opts.includes(r)) opts.push(r);
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < challenges.length) {
+                loadQuestion();
+            } else {
+                showResults();
             }
-            opts.sort(() => Math.random() - 0.5);
-
-            opts.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "bg-white hover:bg-emerald-100 text-emerald-800 text-xl font-bold py-3 rounded-2xl shadow border-2 border-emerald-300 bouncy-btn";
-                btn.textContent = `${opt} metros`;
-                btn.onclick = function() {
-                    if (opt === p3Correct) {
-                        playSound('success');
-                        triggerConfetti();
-                        setLiliSpeech("Parabéns! Você somou todos os lados direitinho! 📐✨");
-                        btn.classList.add('bg-emerald-200', 'border-emerald-400');
-                    } else {
-                        playSound('error');
-                        setLiliSpeech("Quase! Lembre-se de que perímetro é a soma de *todos* os contornos.");
-                        btn.classList.add('bg-rose-200', 'border-rose-400');
-                    }
-                };
-                container.appendChild(btn);
-            });
         }
 
-        /* --- JOGO 4: Números Decimais --- */
-        let p4Correct = "";
-        function initPage4() {
-            const ops = [
-                { q: "Quanto é 4,5 + 3,25?", ans: "7,75", opts: ["7,75", "7,50", "8,25", "6,75"] },
-                { q: "Quanto é 10,0 - 4,3?", ans: "5,7", opts: ["6,7", "5,7", "6,3", "5,3"] },
-                { q: "Quanto é 2,5 × 4?", ans: "10", opts: ["8", "10", "10,5", "9,5"] },
-                { q: "Quanto é 12,6 ÷ 2?", ans: "6,3", opts: ["6,1", "6,3", "6,5", "7,3"] }
-            ];
-            const current = ops[Math.floor(Math.random() * ops.length)];
-            p4Correct = current.ans;
+        function showResults() {
+            quizScreen.classList.add("hidden");
+            resultScreen.classList.remove("hidden");
+            
+            document.getElementById("final-score").innerText = `${score} / 100`;
+            const resultEmoji = document.getElementById("result-emoji");
+            const resultMessage = document.getElementById("result-message");
 
-            document.getElementById('p4-question').textContent = current.q;
-
-            const container = document.getElementById('p4-options');
-            container.innerHTML = '';
-            let shuffled = [...current.opts].sort(() => Math.random() - 0.5);
-
-            shuffled.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "bg-white hover:bg-purple-100 text-purple-800 text-xl font-bold py-3 rounded-2xl shadow border-2 border-purple-300 bouncy-btn";
-                btn.textContent = opt;
-                btn.onclick = function() {
-                    if (opt === p4Correct) {
-                        playSound('success');
-                        triggerConfetti();
-                        setLiliSpeech("Excelente! Domínio total dos números decimais! 🌟");
-                        btn.classList.add('bg-emerald-200', 'border-emerald-400');
-                    } else {
-                        playSound('error');
-                        setLiliSpeech("Quase! Alinhe bem as vírgulas e tente novamente.");
-                        btn.classList.add('bg-rose-200', 'border-rose-400');
-                    }
-                };
-                container.appendChild(btn);
-            });
-        }
-
-        /* --- JOGO 5: Expressões e Lógica --- */
-        let p5Correct = 0;
-        function initPage5() {
-            const challenges = [
-                { q: "Resolva a expressão: 10 + 4 × 3 = ?", ans: 22 },
-                { q: "Resolva a expressão: (8 + 2) × 5 = ?", ans: 50 },
-                { q: "Qual é o valor de 30 - 5 × 4 = ?", ans: 10 },
-                { q: "Se 3 caixas têm 12 maçãs cada, quantas maçãs há no total?", ans: 36 }
-            ];
-            const current = challenges[Math.floor(Math.random() * challenges.length)];
-            p5Correct = current.ans;
-
-            document.getElementById('p5-question').textContent = current.q;
-
-            const container = document.getElementById('p5-options');
-            container.innerHTML = '';
-
-            let opts = [p5Correct];
-            while(opts.length < 4) {
-                let r = p5Correct + (Math.floor(Math.random() * 10) - 5);
-                if (r > 0 && !opts.includes(r)) opts.push(r);
+            if (score === 100) {
+                resultEmoji.innerText = "👑🏆";
+                resultMessage.innerText = "Incrível! Você gabaritou e é um verdadeiro Mestre da Matemática!";
+            } else if (score >= 60) {
+                resultEmoji.innerText = "🌟👏";
+                resultMessage.innerText = "Muito bom! Você foi super bem nos desafios, continue praticando!";
+            } else {
+                resultEmoji.innerText = "💡💪";
+                resultMessage.innerText = "Bom esforço! Que tal tentar de novo para melhorar sua pontuação?";
             }
-            opts.sort(() => Math.random() - 0.5);
-
-            opts.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = "bg-white hover:bg-sky-100 text-sky-800 text-xl font-bold py-3 rounded-2xl shadow border-2 border-sky-300 bouncy-btn";
-                btn.textContent = opt;
-                btn.onclick = function() {
-                    if (opt === p5Correct) {
-                        playSound('success');
-                        triggerConfetti();
-                        setLiliSpeech("Uhuul! Você pensou como um verdadeiro gênio da matemática! 🧠🎉");
-                        btn.classList.add('bg-emerald-200', 'border-emerald-400');
-                    } else {
-                        playSound('error');
-                        setLiliSpeech("Ops! Lembre-se da ordem correta das operações. Tente de novo!");
-                        btn.classList.add('bg-rose-200', 'border-rose-400');
-                    }
-                };
-                container.appendChild(btn);
-            });
         }
 
-        window.onload = function() {
-            switchPage(1);
-        };
+        function restartQuiz() {
+            startQuiz();
+        }
     </script>
 </body>
 </html>
